@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.greenalert.ui.edit.EditDestinationScreen
 import com.example.greenalert.ui.home.HomeScreen
 import com.example.greenalert.ui.manualinput.ManualInputScreen
 import com.example.greenalert.ui.mappicker.MapPickerScreen
@@ -37,10 +38,13 @@ fun NavGraph(
                 },
                 onNavigateToSettings = {
                     navController.navigate(Screen.Settings.route)
+                },
+                onNavigateToEdit = { destinationId ->
+                    navController.navigate(Screen.EditDestination.createRoute(destinationId))
                 }
             )
         }
-        
+
         composable(Screen.MapPicker.route) {
             MapPickerScreen(
                 onNavigateBack = {
@@ -48,7 +52,7 @@ fun NavGraph(
                 }
             )
         }
-        
+
         composable(
             route = Screen.ManualInput.route,
             arguments = listOf(
@@ -72,7 +76,7 @@ fun NavGraph(
             val address = backStackEntry.arguments?.getString("address")?.takeIf { it.isNotBlank() }
             val lat = backStackEntry.arguments?.getString("lat")?.toDoubleOrNull()
             val lng = backStackEntry.arguments?.getString("lng")?.toDoubleOrNull()
-            
+
             ManualInputScreen(
                 onNavigateBack = {
                     navController.popBackStack()
@@ -82,7 +86,22 @@ fun NavGraph(
                 initialLng = lng
             )
         }
-        
+
+        composable(
+            route = Screen.EditDestination.route,
+            arguments = listOf(
+                navArgument("destinationId") {
+                    type = NavType.LongType
+                }
+            )
+        ) {
+            EditDestinationScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
         composable(Screen.Settings.route) {
             SettingsScreen(
                 onNavigateBack = {

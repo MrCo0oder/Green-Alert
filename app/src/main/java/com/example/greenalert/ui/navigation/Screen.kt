@@ -8,5 +8,10 @@ sealed class Screen(val route: String) {
             return "manual_input?address=${address ?: ""}&lat=${lat ?: ""}&lng=${lng ?: ""}"
         }
     }
+    data object EditDestination : Screen("edit_destination/{destinationId}") {
+        fun createRoute(destinationId: Long): String {
+            return "edit_destination/$destinationId"
+        }
+    }
     data object Settings : Screen("settings")
 }
