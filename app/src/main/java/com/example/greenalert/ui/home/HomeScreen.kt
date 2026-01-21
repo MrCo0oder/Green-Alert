@@ -30,6 +30,7 @@ fun HomeScreen(
     onNavigateToMapPicker: () -> Unit,
     onNavigateToManualInput: () -> Unit,
     onNavigateToSettings: () -> Unit,
+    onNavigateToEdit: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -237,6 +238,9 @@ fun HomeScreen(
                             },
                             onDelete = {
                                 viewModel.deleteDestination(destination)
+                            },
+                            onEdit = {
+                                onNavigateToEdit(destination.id)
                             }
                         )
                     }

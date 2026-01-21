@@ -12,6 +12,7 @@ data class Destination(
     val longitude: Double,
     val address: String,
     val radiusMeters: Float = 200f,
+    val category: String = "OTHER",
     val isActive: Boolean = true,
     val createdAt: Long = System.currentTimeMillis()
 )

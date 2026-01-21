@@ -69,10 +69,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             destinationRepository.toggleDestinationActive(destination.id, isActive)
             
+            // Always remove old geofence first, then add only if active and tracking enabled
+            geofenceManager.removeGeofence(destination.id)
             if (isActive && _uiState.value.preferences.trackingEnabled) {
                 geofenceManager.addGeofence(destination.copy(isActive = true))
-            } else {
-                geofenceManager.removeGeofence(destination.id)
             }
         }
     }

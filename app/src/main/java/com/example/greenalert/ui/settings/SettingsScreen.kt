@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.greenalert.BuildConfig
 import com.example.greenalert.ui.components.RadiusSlider
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -176,7 +177,7 @@ fun SettingsScreen(
             
             // App Info
             Text(
-                text = "Green Alert v1.0",
+                text = "Green Alert v${BuildConfig.VERSION_NAME}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
