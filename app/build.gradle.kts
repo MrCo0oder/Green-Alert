@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +8,28 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
+
+// Generate dynamic version code and name based on build timestamp
+val buildTimestamp = System.currentTimeMillis()
+val versionMajor = 1
+val versionMinor = 0
+val versionPatch = 0
+
+// Version code format: combine major version with timestamp hours
+// Example: 1 * 10000000 + (hours since 2020) gives unique int < Int.MaxValue
+val baseYear = 2020
+val currentDate = Date(buildTimestamp)
+val yearsSince2020 = SimpleDateFormat("yyyy").format(currentDate).toInt() - baseYear
+val dayOfYear = SimpleDateFormat("DDD").format(currentDate).toInt()
+val hourOfDay = SimpleDateFormat("HH").format(currentDate).toInt()
+val minuteOfHour = SimpleDateFormat("mm").format(currentDate).toInt()
+
+// Format: vMajor(1) + year(2) + dayOfYear(3) + hour(2) + minute(2) = max 10 digits
+// Example: 1_06_021_14_38 = 106021438 for version 1.0.0, year 2026, day 21 at 14:38
+val generatedVersionCode = (versionMajor * 100000000) + (yearsSince2020 * 1000000) + (dayOfYear * 10000) + (hourOfDay * 100) + minuteOfHour
+
+// Format: "1.0.0 (20260121-1438)"
+val generatedVersionName = "$versionMajor.$versionMinor.$versionPatch (${SimpleDateFormat("yyyyMMdd-HHmm").format(currentDate)})"
 
 android {
     namespace = "com.example.greenalert"
@@ -14,8 +39,8 @@ android {
         applicationId = "com.example.greenalert"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = generatedVersionCode
+        versionName = generatedVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,6 +63,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
