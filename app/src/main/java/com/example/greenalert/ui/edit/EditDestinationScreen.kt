@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.greenalert.data.model.DestinationCategory
+import com.example.greenalert.ui.model.DestinationUiCategory
 import com.example.greenalert.ui.components.RadiusSlider
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,7 +127,7 @@ fun EditDestinationScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
-                    items(DestinationCategory.entries) { category ->
+                    items(DestinationUiCategory.values()) { category ->
                         CategoryChip(
                             category = category,
                             isSelected = uiState.category == category,
@@ -195,7 +195,7 @@ fun EditDestinationScreen(
 
 @Composable
 fun CategoryChip(
-    category: DestinationCategory,
+    category: DestinationUiCategory,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {

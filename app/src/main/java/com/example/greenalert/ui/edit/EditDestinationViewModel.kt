@@ -5,8 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.greenalert.data.model.Destination
-import com.example.greenalert.data.model.DestinationCategory
 import com.example.greenalert.data.repository.DestinationRepository
+import com.example.greenalert.ui.model.DestinationUiCategory
+import com.example.greenalert.ui.model.toUiCategory
 import com.example.greenalert.service.GeofenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -21,7 +22,7 @@ data class EditDestinationUiState(
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
     val radiusMeters: Float = 200f,
-    val category: DestinationCategory = DestinationCategory.OTHER,
+    val category: DestinationUiCategory = DestinationUiCategory.OTHER,
     val isActive: Boolean = true,
     val isLoading: Boolean = true,
     val isSaved: Boolean = false,
@@ -58,7 +59,7 @@ class EditDestinationViewModel @Inject constructor(
                         latitude = destination.latitude,
                         longitude = destination.longitude,
                         radiusMeters = destination.radiusMeters,
-                        category = destination.categoryEnum,
+                        category = destination.category.toUiCategory(),
                         isActive = destination.isActive,
                         isLoading = false
                     )
@@ -79,7 +80,7 @@ class EditDestinationViewModel @Inject constructor(
         _uiState.update { it.copy(radiusMeters = radius) }
     }
 
-    fun onCategoryChanged(category: DestinationCategory) {
+    fun onCategoryChanged(category: DestinationUiCategory) {
         _uiState.update { it.copy(category = category) }
     }
 
@@ -107,9 +108,9 @@ class EditDestinationViewModel @Inject constructor(
 
             destinationRepository.updateDestination(updatedDestination)
 
-            // Update geofence if active
-            if (state.isActive) {
-                geofenceManager.removeGeofence(state.destinationId)
+            // Always remove old geofence first, then add new one only if active
+            geofenceManager.removeGeofence(state.destinationId)
+            if (updatedDestination.isActive) {
                 geofenceManager.addGeofence(updatedDestination)
             }
 

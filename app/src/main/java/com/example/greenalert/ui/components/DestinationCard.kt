@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.greenalert.data.model.Destination
+import com.example.greenalert.ui.model.toUiCategory
 
 @Composable
 fun DestinationCard(
@@ -22,7 +23,7 @@ fun DestinationCard(
     onEdit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val category = destination.categoryEnum
+    val category = destination.category.toUiCategory()
 
     Card(
         modifier = modifier
